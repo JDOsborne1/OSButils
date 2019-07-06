@@ -1,0 +1,12 @@
+Package: OSButils
+Type: Package
+Title: Utilities Package
+Version: 0.1.0
+Author: Joseph Osborne
+Maintainer: Joseph Osborne <joe@osborne.uk.com>
+Description: A utilities package used to collect all the helper functions 
+    made in the process of developing R analyses
+License: CCBY-4.0
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
