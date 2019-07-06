@@ -1,34 +1,49 @@
-# Utility Scripts
-
-get_hist <- function(df, ...){
-  require(pipeR)
-  df %>>%
-    ggplot(aes(x = ...)) +
-    geom_bar()
-}
-
+#' Developer Comments
+#'
+#' @description A function which can be called in the middle of pipe pipelines to optionally print a comment at that step. Reliant on either an object called running_mode, or a config variable of the same name
+#'
+#'
+#' @param input The data flow as it would go into the next step
+#' @param comment The comment to print when prompted
+#'
+#' @return The same data flow, unchanged
+#' @export
+#'
+#' @examples
 devCom <- function(input, comment){
-  running_mode <- get0("running_mode", envir = .GlobalEnv, ifnotfound = "Dev")
-  if(running_mode == "Dev"){
+  if(isTRUE(config::get('running_mode') == "Dev") | get0("running_mode", envir = .GlobalEnv, ifnotfound = "Dev") == "Dev"){
     print(comment)
   }
   return(input)
-  
 }
 
-step <- 1
-printAndIncrementStep <- function(value){
-  assign(deparse(substitute(value)), value + 1, envir = .GlobalEnv)
+
+#' Step incrementer and assigner
+#'
+#' @param val the object to step
+#'
+#' @return the value of that object, the object has been incremented in the background
+#'
+#' @examples
+printAndIncrementStep <- function(val){
+  name <- deparse(substitute(val))
+  value <- get0(name, envir = .GlobalEnv, ifnotfound = 1)
+  assign(name, value + 1, envir = .GlobalEnv)
   return(value)
 }
 
+#' Step title printer
+#'
+#' @param string The title of the step
+#'
+#' @return NULL The function instead prints the step title along with a timestamp
+#' @export
+#'
+#' @examples
+#' @examples
+#' @examples
 printStepTitle <- function(string){
-  print(paste0("Step ", printAndIncrementStep(step), ": ", string, " - ", strftime(Sys.time(),"%H:%M")))
-}
-
-
-getPropVect <- function(vect){
-  return(vect/sum(vect))
+  print(paste0("Step ", printAndIncrementStep(analysis_step), ": ", string, " - ", strftime(Sys.time(),"%H:%M")))
 }
 
 #' One Stop Data Type Formatting
