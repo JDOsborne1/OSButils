@@ -70,3 +70,19 @@ data_type_format <- function(dfin, dateform = "%Y-%m-%d", datereg = "date", numr
     mutate_at(vars(matches(flagreg)),funs(as.factor))
   return(dfout)
 }
+
+
+
+#' Add caveats function
+#'
+#' @param new_caveat The added caveat to put into the caveats folder
+#'
+#' @return None, assigns the caveat to the environment
+#' @export
+#'
+#' @examples
+addCaveats <- function(new_caveat){
+  get0("caveats", envir = .GlobalEnv, ifnotfound = "") %>%
+    c(new_caveat) %>%
+    {assign("caveats", ., envir = .GlobalEnv)}
+}
