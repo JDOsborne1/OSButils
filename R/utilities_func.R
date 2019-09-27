@@ -86,3 +86,29 @@ addCaveats <- function(new_caveat){
     c(new_caveat) %>%
     {assign("caveats", ., envir = .GlobalEnv)}
 }
+
+#' Distinctness checker
+#'
+#' @param df
+#' @param on
+#'
+#' @return
+#' @export
+#'
+#' @examples
+is.distinct <- function(df, on) {
+  distinct(df, {{on}}) %>% nrow() == nrow(df)
+}
+
+#' show the indistinct values
+#'
+#' @param df
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+showIndistinct <- function(df, ...){
+  df %>% add_count(...) %>% filter(n > 1) %>% arrange(...)%>% View()
+}

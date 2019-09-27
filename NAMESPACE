@@ -3,4 +3,6 @@
 export(addCaveats)
 export(data_type_format)
 export(devCom)
+export(is.distinct)
 export(printStepTitle)
+export(showIndistinct)
