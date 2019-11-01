@@ -112,3 +112,29 @@ is.distinct <- function(df, on) {
 showIndistinct <- function(df, ...){
   df %>% add_count(...) %>% filter(n > 1) %>% arrange(...)%>% View()
 }
+
+
+#' spoof a dependency
+#'
+#' @param a_tibble
+#' @param a_dependency
+#'
+#' @return
+#' @export
+#'
+#' @examples
+utilDepend <- function(a_tibble, a_dependency){
+  a_tibble
+}
+
+#' get range of a vector
+#'
+#' @param a_vect
+#'
+#' @return
+#' @export
+#'
+#' @examples
+utilRange <- function(a_vect){
+  max(a_vect, na.rm = T) - min(a_vect, na.rm = T)
+}
