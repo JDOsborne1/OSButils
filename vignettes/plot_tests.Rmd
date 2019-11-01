@@ -1,0 +1,43 @@
+---
+title: "plot_tests"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{plot_tests}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(OSButils)
+library(magrittr)
+library(tibble)
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+```
+
+```{r}
+(testing_dataset <- datasets::CO2 %>% 
+  as_tibble() %>% 
+   mutate(Plant = gsub("^.{2}", "", Plant)) %>% 
+  group_by(Type, Plant) %>% 
+  summarise(Sum.Uptake = sum(uptake)) )
+```
+
+```{r}
+testing_dataset %>% 
+  osb_SlopePlot(changes_in = Sum.Uptake, for_the = Plant, across = Type) +
+  scale_color_brewer(type = "qual")
+```
+
+```{r}
+testing_dataset %>% osb_DotPlot(changes_in = Sum.Uptake, for_the = Plant, across = Type) + scale_color_brewer(type = "qual")
+```
+
