@@ -138,3 +138,31 @@ utilDepend <- function(a_tibble, a_dependency){
 utilRange <- function(a_vect){
   max(a_vect, na.rm = T) - min(a_vect, na.rm = T)
 }
+
+
+
+#' Monitored Left Join
+#'
+#' @param x The LHS object
+#' @param y The RHS object
+#' @param by the joining column(s) between x & y
+#' @param ... Additional argiments to be passed to dplyr::nest_join
+#'
+#' @return
+#' @export
+#'
+#' @examples
+left_join_monitor <- function(x, y, by, ...){
+  nest_output <- dplyr::nest_join(x, y, by, ...)
+
+  nest_output %>%
+    dplyr::mutate(numrows = purrr::map(y, nrow)) %>%
+    dplyr::select(numrows) %>%
+    tidyr::unnest(cols = c(numrows)) %>%
+    dplyr::pull(numrows) %>%
+    {sum(.)/length(.)} %>%
+    {print(glue::glue("Dropout Rate = {scales::percent(.)}"))}
+
+  nest_output %>%
+      tidyr::unnest(cols = c(y), keep_empty = TRUE)
+}
