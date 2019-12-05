@@ -96,3 +96,21 @@ osb_DotPlot <- function(dataset, changes_in , for_the, across, formatter = funct
 # Drift Plot --------------------------------------------------------------
 
 
+#' generate drift plot
+#'
+#' @param dataset
+#' @param changes_in
+#' @param for_the
+#' @param across
+#' @param formatter
+#'
+#' @return
+#' @export
+#'
+#' @examples
+osb_DriftPlot <- function(dataset, changes_in , for_the, across, formatter = function(x) x ) {
+  data_values <- dataset %>% pull({{across}}) %>% levels()
+  pivot_wider(dataset, names_from = {{across}}, values_from = {{changes_in}})
+  print(data_values)
+}
+
