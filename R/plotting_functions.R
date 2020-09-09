@@ -14,12 +14,12 @@
 #' @examples
 osb_SlopePlot <- function(dataset, changes_in, for_the, across){
 
-  ggplot(data = dataset,  aes(x = {{across}}, y={{changes_in}}, colour={{for_the}}, group = {{for_the}})) +
-    geom_line(aes(color = {{for_the}}), alpha = 1, size = 1) +
-    geom_point(aes(color = {{for_the}}), alpha = 1, size = 3) +
-    geom_text_repel(
-      data = dataset %>% filter({{across}} == levels({{across}})[1]),
-      aes(label = paste0({{for_the}}, " : ", round({{changes_in}}))) ,
+  ggplot2::ggplot(data = dataset,  ggplot2::aes(x = {{across}}, y={{changes_in}}, colour={{for_the}}, group = {{for_the}})) +
+    ggplot2::geom_line(ggplot2::aes(color = {{for_the}}), alpha = 1, size = 1) +
+    ggplot2::geom_point(ggplot2::aes(color = {{for_the}}), alpha = 1, size = 3) +
+    ggrepel::geom_text_repel(
+      data = dataset %>% dplyr::filter({{across}} == levels({{across}})[1]),
+      ggplot2::aes(label = paste0({{for_the}}, " : ", round({{changes_in}}))) ,
       hjust = "left",
       fontface = "bold",
       size = 4,
@@ -27,15 +27,15 @@ osb_SlopePlot <- function(dataset, changes_in, for_the, across){
       nudge_x = -.5,
       direction = "x"
     ) +
-    geom_text_repel(data = dataset %>% filter({{across}} == levels({{across}})[2]),
-                    aes(label = paste0({{for_the}}, " : ", round({{changes_in}}))),
+    ggrepel::geom_text_repel(data = dataset %>% dplyr::filter({{across}} == levels({{across}})[2]),
+                    ggplot2::aes(label = paste0({{for_the}}, " : ", round({{changes_in}}))),
                     hjust = "right",
                     fontface = "bold",
                     size = 4,
                     nudge_x = .5,
                     direction = "y") +
-    theme_classic() +
-    theme(
+    ggplot2::theme_classic() +
+    ggplot2::theme(
       axis.line.y = element_blank()
       , axis.text.y = element_blank()
       , axis.ticks.y = element_blank()
@@ -59,37 +59,37 @@ osb_SlopePlot <- function(dataset, changes_in, for_the, across){
 #'
 #' @examples
 osb_DotPlot <- function(dataset, changes_in , for_the, across, formatter = function(x) x ) {
-  ggplot(dataset, aes(x = {{for_the}})) +
-    geom_point(
-      aes(y = {{changes_in}}, color = {{across}})
+  ggplot2::ggplot(dataset, ggplot2::aes(x = {{for_the}})) +
+    ggplot2::geom_point(
+      ggplot2::aes(y = {{changes_in}}, color = {{across}})
       , size = 2
 
     ) +
-    geom_line(
-      aes(group = {{for_the}}, y = {{changes_in}})
+    ggplot2::geom_line(
+      ggplot2::aes(group = {{for_the}}, y = {{changes_in}})
       , alpha = 0.3
     ) +
-    geom_text(
-      data = filter(dataset, {{across}} == levels({{across}})[1])
-      , aes(y = {{changes_in}}, label = formatter({{changes_in}}))
+    ggplot2::geom_text(
+      data = dplyr::filter(dataset, {{across}} == levels({{across}})[1])
+      , ggplot2::aes(y = {{changes_in}}, label = formatter({{changes_in}}))
       , hjust = -.3
     ) +
-    geom_text(
-      data = filter(dataset, {{across}} == levels({{across}})[2])
-      , aes(y = {{changes_in}}, label = formatter({{changes_in}}))
+    ggplot2::geom_text(
+      data = dplyr::filter(dataset, {{across}} == levels({{across}})[2])
+      , ggplot2::aes(y = {{changes_in}}, label = formatter({{changes_in}}))
       , hjust = 1.3
     ) +
-    coord_flip() +
-    theme_classic() +
-    scale_y_continuous(
+    ggplot2::coord_flip() +
+    ggplot2::theme_classic() +
+    ggplot2::scale_y_continuous(
       limits = c(
-        min(pull(dataset, {{changes_in}})) * 0.9
-        , max(pull(dataset, {{changes_in}})) * 1.1)
+        min(dplyr::pull(dataset, {{changes_in}})) * 0.9
+        , max(dplyr::pull(dataset, {{changes_in}})) * 1.1)
     ) +
-    theme(
-      axis.text.x = element_blank()
-      , axis.ticks.x = element_blank()
-      , axis.line.x = element_blank()
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_blank()
+      , axis.ticks.x = ggplot2::element_blank()
+      , axis.line.x = ggplot2::element_blank()
     )
 }
 
@@ -109,8 +109,8 @@ osb_DotPlot <- function(dataset, changes_in , for_the, across, formatter = funct
 #'
 #' @examples
 osb_DriftPlot <- function(dataset, changes_in , for_the, across, formatter = function(x) x ) {
-  data_values <- dataset %>% pull({{across}}) %>% levels()
-  pivot_wider(dataset, names_from = {{across}}, values_from = {{changes_in}})
+  data_values <- dataset %>% dplyr::pull({{across}}) %>% levels()
+  tidyr::pivot_wider(dataset, names_from = {{across}}, values_from = {{changes_in}})
   print(data_values)
 }
 
