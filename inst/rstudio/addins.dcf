@@ -1,0 +1,5 @@
+Name: Prepend Namepspace
+Description: Addin to replace a highlighted function with the formal name as it would be in the existing environment.
+Binding: prepend_namespace
+Interactive: false
+
