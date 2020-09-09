@@ -9,6 +9,9 @@ osb_SlopePlot(dataset, changes_in, for_the, across)
 \arguments{
 \item{across}{}
 }
+\value{
+
+}
 \description{
 generate slope plot
 }

@@ -4,11 +4,13 @@
 \alias{osb_DriftPlot}
 \title{generate drift plot}
 \usage{
-osb_DriftPlot(dataset, changes_in, for_the, across,
-  formatter = function(x) x)
+osb_DriftPlot(dataset, changes_in, for_the, across, formatter = function(x) x)
 }
 \arguments{
 \item{formatter}{}
+}
+\value{
+
 }
 \description{
 generate drift plot

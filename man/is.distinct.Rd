@@ -9,6 +9,9 @@ is.distinct(df, on)
 \arguments{
 \item{on}{}
 }
+\value{
+
+}
 \description{
 Distinctness checker
 }

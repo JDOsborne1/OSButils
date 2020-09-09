@@ -9,6 +9,9 @@ showIndistinct(df, ...)
 \arguments{
 \item{...}{}
 }
+\value{
+
+}
 \description{
 show the indistinct values
 }

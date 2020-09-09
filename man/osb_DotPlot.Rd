@@ -4,11 +4,13 @@
 \alias{osb_DotPlot}
 \title{generate dot plot}
 \usage{
-osb_DotPlot(dataset, changes_in, for_the, across, formatter = function(x)
-  x)
+osb_DotPlot(dataset, changes_in, for_the, across, formatter = function(x) x)
 }
 \arguments{
 \item{formatter}{}
+}
+\value{
+
 }
 \description{
 generate dot plot

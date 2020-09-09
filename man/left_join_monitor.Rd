@@ -15,6 +15,9 @@ left_join_monitor(x, y, by, ...)
 
 \item{...}{Additional argiments to be passed to dplyr::nest_join}
 }
+\value{
+
+}
 \description{
 Monitored Left Join
 }

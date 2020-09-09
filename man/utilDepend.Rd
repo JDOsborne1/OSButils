@@ -9,6 +9,9 @@ utilDepend(a_tibble, a_dependency)
 \arguments{
 \item{a_dependency}{}
 }
+\value{
+
+}
 \description{
 spoof a dependency
 }

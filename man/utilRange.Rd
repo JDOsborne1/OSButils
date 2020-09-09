@@ -9,6 +9,9 @@ utilRange(a_vect)
 \arguments{
 \item{a_vect}{}
 }
+\value{
+
+}
 \description{
 get range of a vector
 }
