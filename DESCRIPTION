@@ -20,4 +20,10 @@ Suggests:
 VignetteBuilder: knitr
 Imports: 
     dplyr,
-    magrittr
+    magrittr,
+    rstudioapi,
+    config,
+    glue,
+    methods,
+    purrr,
+    tidyr
