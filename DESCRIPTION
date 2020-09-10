@@ -13,5 +13,11 @@ RoxygenNote: 7.1.1
 Suggests: 
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    ggrepel,
+    ggplot2,
+    tibble
 VignetteBuilder: knitr
+Imports: 
+    dplyr,
+    magrittr
