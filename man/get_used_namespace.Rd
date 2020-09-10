@@ -14,5 +14,8 @@ get_used_namespace(.function_name)
 }
 \description{
 Function to get the used namespace and prepend it to the
-  function name
+  function name.
+
+  When it is used on a function with no defintion, or a function which is a
+  part of the base packages, it will simply return the input unchanged.
 }
