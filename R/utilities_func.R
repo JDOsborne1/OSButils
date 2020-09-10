@@ -1,6 +1,15 @@
 #' Developer Comments
 #'
-#' @description A function which can be called in the middle of pipe pipelines to optionally print a comment at that step. Reliant on either an object called running_mode, or a config variable of the same name
+#' @description A function which can be called in the middle of pipe pipelines
+#'   to optionally print a comment at that step. Reliant on either an object
+#'   called running_mode, or a config variable of the same name
+#'
+#'   Intended to be used in function with:
+#'
+#'   a) lots of piped steps abstracted as functions, which need some labelling.
+#'
+#'   b) lots of piped steps which are prone to failure, as a means to
+#'   identifying where in a pipeline a failure occured.
 #'
 #'
 #' @param input The data flow as it would go into the next step
@@ -34,9 +43,14 @@ printAndIncrementStep <- function(val){
 
 #' Step title printer
 #'
+#' @description This function is a bit dodge, relies on a variable called
+#'   analysis step in the environment, quite a niche application, but relied on
+#'   in some existing code so im going to leave it in.
+#'
 #' @param string The title of the step
 #'
-#' @return NULL The function instead prints the step title along with a timestamp
+#' @return NULL The function instead prints the step title along with a
+#'   timestamp
 #' @export
 #'
 #' @examples
@@ -62,10 +76,12 @@ printStepTitle <- function(string){
 #' @return The dataframe with the appropriate data type transformations applied to the columns
 #' @export
 #'
+#' @importFrom rlang .data
+#'
 #' @examples
 data_type_format <- function(dfin, dateform = "%Y-%m-%d", datereg = "date", numreg = "value", flagreg = "flag") {
   dfout <- dfin %>%
-    dplyr::mutate_at(dplyr::vars(dplyr::matches(datereg)),dplyr::funs(as.Date(as.character(.),format=dateform)))%>%
+    dplyr::mutate_at(dplyr::vars(dplyr::matches(datereg)),dplyr::funs(as.Date(as.character(.data),format=dateform)))%>%
     dplyr::mutate_at(dplyr::vars(dplyr::matches(numreg)),dplyr::funs(as.numeric))%>%
     dplyr::mutate_at(dplyr::vars(dplyr::matches(flagreg)),dplyr::funs(as.factor))
   return(dfout)
@@ -80,17 +96,18 @@ data_type_format <- function(dfin, dateform = "%Y-%m-%d", datereg = "date", numr
 #' @return None, assigns the caveat to the environment
 #' @export
 #'
+#' @importFrom rlang .data
 #' @examples
 addCaveats <- function(new_caveat){
   get0("caveats", envir = .GlobalEnv, ifnotfound = "") %>%
     c(new_caveat) %>%
-    {assign("caveats", ., envir = .GlobalEnv)}
+    {assign("caveats", .data, envir = .GlobalEnv)}
 }
 
 #' Distinctness checker
 #'
-#' @param df
-#' @param on
+#' @param df Source dataframe
+#' @param on The NSE variable which you want to check the distinctiveness of
 #'
 #' @return
 #' @export
@@ -102,26 +119,33 @@ is.distinct <- function(df, on) {
 
 #' show the indistinct values
 #'
-#' @param df
-#' @param ...
+#' @param df Source Dataframe
+#' @param ... The variable, or variables which you want to view all indistinct combinations of.
 #'
 #' @return
 #' @export
+#' @importFrom rlang .data
 #'
 #' @examples
 showIndistinct <- function(df, ...){
   df %>%
     dplyr::add_count(...) %>%
-    dplyr::filter(n > 1) %>%
+    dplyr::filter(.data$n > 1) %>%
     dplyr::arrange(...) %>%
     utils::View()
 }
 
 
-#' spoof a dependency
+#' Spoof a dependency
 #'
-#' @param a_tibble
-#' @param a_dependency
+#' @description  This is a convinience function designed for use with {drake}.
+#'   It will detect the dependencies automatically from function calls. In cases
+#'   where background tasks, like a SQL query, are dependencies, then this can
+#'   be used to flag that so the code is executed in the correct order.
+#'
+#'
+#' @param a_tibble A table
+#' @param a_dependency Another variable which you want to show as a dependency
 #'
 #' @return
 #' @export
@@ -131,9 +155,9 @@ utilDepend <- function(a_tibble, a_dependency){
   a_tibble
 }
 
-#' get range of a vector
+#' Get the range of a numeric vector
 #'
-#' @param a_vect
+#' @param a_vect a numeric vector
 #'
 #' @return
 #' @export
@@ -147,6 +171,10 @@ utilRange <- function(a_vect){
 
 #' Monitored Left Join
 #'
+#' @description This is currently /extremely/ slow, likely due to the extra
+#'   steps injected in the middle, and the fact that no backend efficiencies in
+#'   left_join() are applicable.
+#'
 #' @param x The LHS object
 #' @param y The RHS object
 #' @param by the joining column(s) between x & y
@@ -154,18 +182,18 @@ utilRange <- function(a_vect){
 #'
 #' @return
 #' @export
-#'
+#' @importFrom rlang .data
 #' @examples
 left_join_monitor <- function(x, y, by, ...){
   nest_output <- dplyr::nest_join(x, y, by, ...)
 
   nest_output %>%
     dplyr::mutate(numrows = purrr::map(y, nrow)) %>%
-    dplyr::select(numrows) %>%
-    tidyr::unnest(cols = c(numrows)) %>%
-    dplyr::pull(numrows) %>%
-    {sum(.)/length(.)} %>%
-    {print(glue::glue("Dropout Rate = {scales::percent(.)}"))}
+    dplyr::select(.data$numrows) %>%
+    tidyr::unnest(cols = c(.data$numrows)) %>%
+    dplyr::pull(.data$numrows) %>%
+    {sum(.data)/length(.data)} %>%
+    {print(glue::glue("Dropout Rate = {scales::percent(.data)}"))}
 
   nest_output %>%
       tidyr::unnest(cols = c(y), keep_empty = TRUE)

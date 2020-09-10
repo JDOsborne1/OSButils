@@ -3,10 +3,10 @@
 
 #' generate slope plot
 #'
-#' @param dataset
-#' @param changes_in
-#' @param for_the
-#' @param across
+#' @param dataset The source dataset
+#' @param changes_in The variable to show changes in
+#' @param for_the The variable to split those changes by
+#' @param across The two timeframes for the changes to occur
 #'
 #' @return
 #' @export
@@ -36,9 +36,9 @@ osb_SlopePlot <- function(dataset, changes_in, for_the, across){
                     direction = "y") +
     ggplot2::theme_classic() +
     ggplot2::theme(
-      axis.line.y = element_blank()
-      , axis.text.y = element_blank()
-      , axis.ticks.y = element_blank()
+      axis.line.y = ggplot2::element_blank()
+      , axis.text.y = ggplot2::element_blank()
+      , axis.ticks.y = ggplot2::element_blank()
       , legend.position = "none"
     )
 }
@@ -48,11 +48,11 @@ osb_SlopePlot <- function(dataset, changes_in, for_the, across){
 
 #' generate dot plot
 #'
-#' @param dataset
-#' @param changes_in
-#' @param for_the
-#' @param across
-#' @param formatter
+#' @param dataset The source dataset
+#' @param changes_in The variable to show changes in
+#' @param for_the The variable to split those changes by
+#' @param across The two timeframes for the changes to occur
+#' @param formatter A formatter function to control the labels
 #'
 #' @return
 #' @export
@@ -98,19 +98,28 @@ osb_DotPlot <- function(dataset, changes_in , for_the, across, formatter = funct
 
 #' generate drift plot
 #'
-#' @param dataset
-#' @param changes_in
-#' @param for_the
-#' @param across
-#' @param formatter
+#' @param dataset The source dataset
+#' @param changes_in The variable to show changes in
+#' @param for_the The variable to split those changes by
+#' @param across The two timeframes for the changes to occur
+#' @param formatter A formatter function to control the labels
+#'
 #'
 #' @return
 #' @export
 #'
 #' @examples
 osb_DriftPlot <- function(dataset, changes_in , for_the, across, formatter = function(x) x ) {
-  data_values <- dataset %>% dplyr::pull({{across}}) %>% levels()
-  tidyr::pivot_wider(dataset, names_from = {{across}}, values_from = {{changes_in}})
+  data_values <- dataset %>%
+    dplyr::pull({{across}}) %>%
+    levels()
+
+  tidyr::pivot_wider(
+    dataset
+    , names_from = {{across}}
+    , values_from = {{changes_in}}
+    )
+
   print(data_values)
 }
 

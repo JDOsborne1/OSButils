@@ -2,16 +2,21 @@
 % Please edit documentation in R/utilities_func.R
 \name{utilDepend}
 \alias{utilDepend}
-\title{spoof a dependency}
+\title{Spoof a dependency}
 \usage{
 utilDepend(a_tibble, a_dependency)
 }
 \arguments{
-\item{a_dependency}{}
+\item{a_tibble}{A table}
+
+\item{a_dependency}{Another variable which you want to show as a dependency}
 }
 \value{
 
 }
 \description{
-spoof a dependency
+This is a convinience function designed for use with {drake}.
+  It will detect the dependencies automatically from function calls. In cases
+  where background tasks, like a SQL query, are dependencies, then this can
+  be used to flag that so the code is executed in the correct order.
 }

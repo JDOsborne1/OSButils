@@ -26,4 +26,5 @@ Imports:
     glue,
     methods,
     purrr,
-    tidyr
+    tidyr,
+    rlang

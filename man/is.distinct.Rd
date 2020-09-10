@@ -7,7 +7,9 @@
 is.distinct(df, on)
 }
 \arguments{
-\item{on}{}
+\item{df}{Source dataframe}
+
+\item{on}{The NSE variable which you want to check the distinctiveness of}
 }
 \value{
 

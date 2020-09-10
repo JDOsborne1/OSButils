@@ -2,16 +2,16 @@
 % Please edit documentation in R/utilities_func.R
 \name{utilRange}
 \alias{utilRange}
-\title{get range of a vector}
+\title{Get the range of a numeric vector}
 \usage{
 utilRange(a_vect)
 }
 \arguments{
-\item{a_vect}{}
+\item{a_vect}{a numeric vector}
 }
 \value{
 
 }
 \description{
-get range of a vector
+Get the range of a numeric vector
 }
