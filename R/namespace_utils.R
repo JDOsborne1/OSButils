@@ -20,7 +20,7 @@ get_used_namespace <- function(.function_name){
     print("Function environment has no name, likely a base function")
     return(.function_name)
   } else {
-    paste0(gsub("^.*:", "", attr(findFunction(.function_name)[[1]], "name")), "::", .function_name)
+    paste0(gsub("^.*:", "", attr(methods::findFunction(.function_name)[[1]], "name")), "::", .function_name)
   }
 }
 

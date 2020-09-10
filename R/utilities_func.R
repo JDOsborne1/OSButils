@@ -65,9 +65,9 @@ printStepTitle <- function(string){
 #' @examples
 data_type_format <- function(dfin, dateform = "%Y-%m-%d", datereg = "date", numreg = "value", flagreg = "flag") {
   dfout <- dfin %>%
-    mutate_at(vars(matches(datereg)),funs(as.Date(as.character(.),format=dateform)))%>%
-    mutate_at(vars(matches(numreg)),funs(as.numeric))%>%
-    mutate_at(vars(matches(flagreg)),funs(as.factor))
+    dplyr::mutate_at(dplyr::vars(dplyr::matches(datereg)),dplyr::funs(as.Date(as.character(.),format=dateform)))%>%
+    dplyr::mutate_at(dplyr::vars(dplyr::matches(numreg)),dplyr::funs(as.numeric))%>%
+    dplyr::mutate_at(dplyr::vars(dplyr::matches(flagreg)),dplyr::funs(as.factor))
   return(dfout)
 }
 
@@ -97,7 +97,7 @@ addCaveats <- function(new_caveat){
 #'
 #' @examples
 is.distinct <- function(df, on) {
-  distinct(df, {{on}}) %>% nrow() == nrow(df)
+  dplyr::distinct(df, {{on}}) %>% nrow() == nrow(df)
 }
 
 #' show the indistinct values
@@ -110,7 +110,11 @@ is.distinct <- function(df, on) {
 #'
 #' @examples
 showIndistinct <- function(df, ...){
-  df %>% add_count(...) %>% filter(n > 1) %>% arrange(...)%>% View()
+  df %>%
+    dplyr::add_count(...) %>%
+    dplyr::filter(n > 1) %>%
+    dplyr::arrange(...) %>%
+    utils::View()
 }
 
 
