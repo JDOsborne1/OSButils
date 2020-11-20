@@ -27,39 +27,6 @@ devCom <- function(input, comment){
 }
 
 
-#' Step incrementer and assigner
-#'
-#' @param val the object to step
-#'
-#' @return the value of that object, the object has been incremented in the background
-#'
-#' @examples
-printAndIncrementStep <- function(val){
-  name <- deparse(substitute(val))
-  value <- get0(name, envir = .GlobalEnv, ifnotfound = 1)
-  assign(name, value + 1, envir = .GlobalEnv)
-  return(value)
-}
-
-#' Step title printer
-#'
-#' @description This function is a bit dodge, relies on a variable called
-#'   analysis step in the environment, quite a niche application, but relied on
-#'   in some existing code so im going to leave it in.
-#'
-#' @param string The title of the step
-#'
-#' @return NULL The function instead prints the step title along with a
-#'   timestamp
-#' @export
-#'
-#' @examples
-#' @examples
-#' @examples
-printStepTitle <- function(string){
-  print(paste0("Step ", printAndIncrementStep(analysis_step), ": ", string, " - ", strftime(Sys.time(),"%H:%M")))
-}
-
 #' One Stop Data Type Formatting
 #'
 #' A function to perform the routine data type transformations at the beggining of a data flow in one easy go.
@@ -89,21 +56,6 @@ data_type_format <- function(dfin, dateform = "%Y-%m-%d", datereg = "date", numr
 
 
 
-#' Add caveats function
-#'
-#' @param new_caveat The added caveat to put into the caveats folder
-#'
-#' @return None, assigns the caveat to the environment
-#' @export
-#'
-#' @importFrom rlang .data
-#' @examples
-addCaveats <- function(new_caveat){
-  get0("caveats", envir = .GlobalEnv, ifnotfound = "") %>%
-    c(new_caveat) %>%
-    {assign("caveats", .data, envir = .GlobalEnv)}
-}
-
 #' Distinctness checker
 #'
 #' @param df Source dataframe
@@ -113,6 +65,15 @@ addCaveats <- function(new_caveat){
 #' @export
 #'
 #' @examples
+#'      test_frame <- data.frame(
+#'              col1 = c("a", "b", "c")
+#'              , col2 = c(1, 1, 2)
+#'              )
+#'       # This part should show TRUE since the test frame is unique on col1
+#'       is.distinct(test_frame, on = col1)
+#'       # This part should show FALSE since the test frame is NOT unique on col2
+#'       is.distinct(test_frame, on = col2)       
+#'
 is.distinct <- function(df, on) {
   dplyr::distinct(df, {{on}}) %>% nrow() == nrow(df)
 }
