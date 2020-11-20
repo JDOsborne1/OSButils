@@ -10,8 +10,11 @@ printStepTitle(string)
 \item{string}{The title of the step}
 }
 \value{
-NULL The function instead prints the step title along with a timestamp
+NULL The function instead prints the step title along with a
+  timestamp
 }
 \description{
-Step title printer
+This function is a bit dodge, relies on a variable called
+  analysis step in the environment, quite a niche application, but relied on
+  in some existing code so im going to leave it in.
 }
