@@ -65,6 +65,15 @@ data_type_format <- function(dfin, dateform = "%Y-%m-%d", datereg = "date", numr
 #' @export
 #'
 #' @examples
+#'      test_frame <- data.frame(
+#'              col1 = c("a", "b", "c")
+#'              , col2 = c(1, 1, 2)
+#'              )
+#'       # This part should show TRUE since the test frame is unique on col1
+#'       is.distinct(test_frame, on = col1)
+#'       # This part should show FALSE since the test frame is NOT unique on col2
+#'       is.distinct(test_frame, on = col2)       
+#'
 is.distinct <- function(df, on) {
   dplyr::distinct(df, {{on}}) %>% nrow() == nrow(df)
 }
