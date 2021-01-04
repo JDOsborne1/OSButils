@@ -1,0 +1,203 @@
+---
+title: "mapping-cheat-sheet"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{mapping-cheat-sheet}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(OSButils)
+```
+
+
+
+#' Generate Postal Area Stats
+#'
+#' @description When perfoming mapping tasks, it is necessary to have several
+#'   pieces of information about the spacial level you are working at. You will
+#'   want to know the more detailed description of the area, and the population
+#'   in that area.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+mmd_ImpGeneratePostalAreaStats <- function(){
+        pop_data <- readr::read_csv("post area population data")
+
+        # Postcode area names and volumes into one table pop_data - copied from Wikipedia
+        pa_names <- readr::read_csv("pa names file") %>%
+                dplyr::select(
+                        PostcodeArea = `Postcode area`,
+                        pa_name = `Postcode area name[1][3]`
+                ) %>%
+                # Remove footnote indicators i.e. [1] from the names
+                dplyr::mutate(pa_name = gsub("\\[[0-9]\\]", "", pa_name))
+
+        pop_data <-
+                dplyr::left_join(pop_data,
+                          pa_names,
+                          by = "PostcodeArea"
+                )
+
+        pop_data
+}
+
+#' Process the penetration values by Postal Area
+#'
+#' @description A wrapper for the process of determining penetration by population
+#'   and then breaking that down into percentiles.
+#'
+#' @param input_ds the input dataset
+#' @param reference_areas The reference data for the UK postal area stats
+#' @param .target_var The target variable to compute densities
+#'
+#' @return
+#' @export
+#'
+#' @examples
+mmd_PurProcessTargetByArea <- function(input_ds, reference_areas = mmd_ImpGeneratePostalAreaStats(),
+                                       .target_var){
+
+        input_ds %>%
+                dplyr::right_join(
+                        reference_areas
+                        ,    by = c("Postcode.Area" = "PostcodeArea")
+                ) %>%
+
+                # many missing postal sectors without leads so make them zero
+                dplyr::mutate_at(dplyr::vars({{.target_var}}), tidyr::replace_na, 0) %>%
+                dplyr::filter(.data$Postcode.Area != "ZE") %>%
+
+                # create pen which is penetration of leads per thousand
+                dplyr::mutate(pen = {{.target_var}} / (.data$Population/1000)) %>%
+
+
+
+                # create pencentiles from 0 worst to 1 best
+                # pen_percentile_leads is the percentile for penetration of leads (takes into account the population
+                # percentile_leads = percentile for number of leads
+                dplyr::mutate(pen_percentile = ifelse({{.target_var}} == 0, 0 , column_percentiles(.data$pen)  ))
+}
+
+#' Getting Postcode area geometries
+#'
+#' @description When perfoming mapping tasks, it is necessary to have several
+#'   pieces of information about the spacial level you are working at. The most
+#'   important is the geometries of the region, this is the data which can
+#'   instruct the mapping program to draw the regions.
+#'
+#'   We also simplify the geometries in the following ways:
+#'   - Change the projection of the boundary data so that it can be plotted by
+#'   leaflet
+#'
+#'   - Simplify using the mapshaper library, in order to produce a lower
+#'   resolution map with a much smaller file size. The default behaviour
+#'   is to keep 5% of the points that make up the boundaries. This seemed
+#'   to work well in this case.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+mmd_ImpGenerateGeometries <- function(){
+
+        sf::st_read("J:/OCCAM/OCCAM.806/MapInfo_Data/Postal", layer = "POSTAREA") %>%
+                sf::st_transform( "+init=epsg:4326") %>%
+
+                # Simplify boundary data
+                rmapshaper::ms_simplify() %>%
+                dplyr::rename(Postcode.Area = .data$PostArea) %>%
+                dplyr::mutate_at(dplyr::vars(.data$Postcode.Area), as.character) %>%
+                dplyr::select(-Standard_Region)
+}
+
+
+# perc_pal_ace <- colorBin("Greens", domain = c(0, 1), bins = 5)
+
+#' Percent Label Formatter
+#'
+#' @description A Wrapper for the percent formatting.
+#'
+#' @param ... The generic grouping variables, allowing for multiple aggregates
+#' @param percent Flag for if we want to format the string as a percent or not
+#'
+#' @return
+#' @export
+#'
+#' @examples
+percentLabelFormat <- function(..., percent = TRUE) {
+        if (percent) {
+                function(type = "bin", cuts, ...) {
+                        scales::percent(cuts)
+                }
+        } else {
+                leaflet::labelFormat(...)
+        }
+}
+
+#' Percentiles Generation
+#'
+#' @description Function to convert a vector into its percentile
+#'   scores.
+#'
+#' @param column The targeted vector
+#'
+#' @return
+#' @export
+#'
+#' @examples
+column_percentiles <- function(column) {
+        stats::ecdf(column)(column)
+}
+
+
+
+#' Extract the postcode Ares
+#'
+#' @description We commonly need to extract the postcode area from
+#'   a postcode, this function wraps the regex extraction process.
+#'
+#' @param str_x The string containing the postcode.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+pfl_PurExtractPostcodeArea <- function(str_x) {
+        stringr::str_match(str_x, "^([a-zA-Z]{1,2})\\d{1,2}")[2]
+}
+
+
+#' Wrapper for the generation of the maps
+#'
+#' @param input_ds the input dataset
+#' @param brand_name the brand,  which the data should be restricted
+#'   to
+#'
+#' @return
+#' @export
+#' @importFrom rlang .data
+#'
+#' @examples
+mmd_PurWrapMappingGen <- function(input_ds, brand_name){
+        input_ds %>%
+                dplyr::filter(.data$Brand == brand_name) %>%
+                dplyr::pull(.data$Geom.Data) %>%
+                {.[[1]]} %>%
+
+                leaflet::leaflet() %>%
+                # sales per 000 percentile
+                leaflet::addRectangles(lat1 = 49, lat2 = 60, lng1 = -9.5, lng2 = 3, opacity = 1, color =  "#fff", fillOpacity = 1) %>%
+                leaflet::addPolygons(fillOpacity = 1, color = "black", weight = 1, label = mmd_PurWrapLabelsProc(input_ds = input_ds, brand_name = brand_name), fillColor = ~perc_pal_ace(.data$pen_percentile), group = paste0(brand_name," Purchases per 000 percentile")) %>%
+                leaflet::addLegend(title = paste0(brand_name," Ranking"), opacity = 0.8, position = "bottomright", pal = perc_pal_ace, group = "Percentile Legend", values = ~pen_percentile, labFormat = percentLabelFormat())
+}
