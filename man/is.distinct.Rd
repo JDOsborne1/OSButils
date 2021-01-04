@@ -7,8 +7,24 @@
 is.distinct(df, on)
 }
 \arguments{
-\item{on}{}
+\item{df}{Source dataframe}
+
+\item{on}{The NSE variable which you want to check the distinctiveness of}
+}
+\value{
+
 }
 \description{
 Distinctness checker
+}
+\examples{
+     test_frame <- data.frame(
+             col1 = c("a", "b", "c")
+             , col2 = c(1, 1, 2)
+             )
+      # This part should show TRUE since the test frame is unique on col1
+      is.distinct(test_frame, on = col1)
+      # This part should show FALSE since the test frame is NOT unique on col2
+      is.distinct(test_frame, on = col2)       
+
 }

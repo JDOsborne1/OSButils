@@ -1,5 +1,5 @@
 ---
-title: "plot_tests"
+title: "Plotting Tests"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{plot_tests}
@@ -24,20 +24,21 @@ library(ggrepel)
 ```
 
 ```{r}
-(testing_dataset <- datasets::CO2 %>% 
-  as_tibble() %>% 
-   mutate(Plant = gsub("^.{2}", "", Plant)) %>% 
-  group_by(Type, Plant) %>% 
+(testing_dataset <- datasets::CO2 %>%
+  as_tibble() %>%
+   mutate(Plant = gsub("^.{2}", "", Plant)) %>%
+  group_by(Type, Plant) %>%
   summarise(Sum.Uptake = sum(uptake)) )
 ```
 
 ```{r}
-testing_dataset %>% 
+testing_dataset %>%
   osb_SlopePlot(changes_in = Sum.Uptake, for_the = Plant, across = Type) +
   scale_color_brewer(type = "qual")
 ```
 
 ```{r}
-testing_dataset %>% osb_DotPlot(changes_in = Sum.Uptake, for_the = Plant, across = Type) + scale_color_brewer(type = "qual")
+testing_dataset %>%
+      osb_DotPlot(changes_in = Sum.Uptake, for_the = Plant, across = Type) +
+      scale_color_brewer(type = "qual")
 ```
-

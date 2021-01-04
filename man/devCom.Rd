@@ -15,5 +15,14 @@ devCom(input, comment)
 The same data flow, unchanged
 }
 \description{
-A function which can be called in the middle of pipe pipelines to optionally print a comment at that step. Reliant on either an object called running_mode, or a config variable of the same name
+A function which can be called in the middle of pipe pipelines
+  to optionally print a comment at that step. Reliant on either an object
+  called running_mode, or a config variable of the same name
+
+  Intended to be used in function with:
+
+  a) lots of piped steps abstracted as functions, which need some labelling.
+
+  b) lots of piped steps which are prone to failure, as a means to
+  identifying where in a pipeline a failure occured.
 }

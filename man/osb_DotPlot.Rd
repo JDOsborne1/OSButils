@@ -4,11 +4,21 @@
 \alias{osb_DotPlot}
 \title{generate dot plot}
 \usage{
-osb_DotPlot(dataset, changes_in, for_the, across, formatter = function(x)
-  x)
+osb_DotPlot(dataset, changes_in, for_the, across, formatter = function(x) x)
 }
 \arguments{
-\item{formatter}{}
+\item{dataset}{The source dataset}
+
+\item{changes_in}{The variable to show changes in}
+
+\item{for_the}{The variable to split those changes by}
+
+\item{across}{The two timeframes for the changes to occur}
+
+\item{formatter}{A formatter function to control the labels}
+}
+\value{
+
 }
 \description{
 generate dot plot

@@ -15,6 +15,11 @@ left_join_monitor(x, y, by, ...)
 
 \item{...}{Additional argiments to be passed to dplyr::nest_join}
 }
+\value{
+
+}
 \description{
-Monitored Left Join
+This is currently /extremely/ slow, likely due to the extra
+  steps injected in the middle, and the fact that no backend efficiencies in
+  left_join() are applicable.
 }

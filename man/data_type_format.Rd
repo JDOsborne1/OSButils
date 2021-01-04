@@ -4,8 +4,13 @@
 \alias{data_type_format}
 \title{One Stop Data Type Formatting}
 \usage{
-data_type_format(dfin, dateform = "\%Y-\%m-\%d", datereg = "date",
-  numreg = "value", flagreg = "flag")
+data_type_format(
+  dfin,
+  dateform = "\%Y-\%m-\%d",
+  datereg = "date",
+  numreg = "value",
+  flagreg = "flag"
+)
 }
 \arguments{
 \item{dfin}{The input dataframe}

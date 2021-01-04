@@ -7,7 +7,16 @@
 osb_SlopePlot(dataset, changes_in, for_the, across)
 }
 \arguments{
-\item{across}{}
+\item{dataset}{The source dataset}
+
+\item{changes_in}{The variable to show changes in}
+
+\item{for_the}{The variable to split those changes by}
+
+\item{across}{The two timeframes for the changes to occur}
+}
+\value{
+
 }
 \description{
 generate slope plot

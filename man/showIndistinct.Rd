@@ -7,7 +7,12 @@
 showIndistinct(df, ...)
 }
 \arguments{
-\item{...}{}
+\item{df}{Source Dataframe}
+
+\item{...}{The variable, or variables which you want to view all indistinct combinations of.}
+}
+\value{
+
 }
 \description{
 show the indistinct values

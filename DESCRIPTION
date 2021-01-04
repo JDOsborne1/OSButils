@@ -9,8 +9,22 @@ Description: A utilities package used to collect all the helper functions
 License: CCBY-4.0
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat,
+    ggrepel,
+    ggplot2,
+    tibble
 VignetteBuilder: knitr
+Imports: 
+    dplyr,
+    magrittr,
+    rstudioapi,
+    config,
+    glue,
+    methods,
+    purrr,
+    tidyr,
+    rlang
